@@ -39,6 +39,7 @@ Dependencies
 
 from typing import List
 from fastapi import FastAPI, File, UploadFile
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from time import sleep
 import json
@@ -63,6 +64,9 @@ class GenerationRequest(BaseModel):
     session_id: str
 
 app = FastAPI()
+
+
+app.mount("/plots", StaticFiles(directory="plots"), name="plots")
 
 
 @app.post("/upload")
