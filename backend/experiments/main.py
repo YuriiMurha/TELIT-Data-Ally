@@ -1,42 +1,3 @@
-"""
-FastAPI Application for ReAct Agent with LangChain and OpenAI
--------------------------------------------------------------
-
-This module sets up a FastAPI application to interact with the ReAct agent. The agent is designed to process user queries,
-interact with an SQL database, and return coherent, context-aware responses. The FastAPI application exposes endpoints
-for health checking and generating responses from the agent.
-
-Structure
----------
-- Imports: Necessary libraries and modules.
-- Data Models: Pydantic models for request validation.
-- FastAPI App: Initialization of the FastAPI application.
-- Endpoints: API endpoints for health check and generating responses.
-
-Usage
------
-1. Run the FastAPI server:
-    ```sh
-    fastapi dev main.py
-    ```
-2. Access the health check endpoint at:
-    http://127.0.0.1:8000/healthcheck
-3. Generate a response by sending a POST request to:
-    http://127.0.0.1:8000/generate
-    with a JSON payload containing the user query.
-
-Example:
-    ```sh
-    curl -X POST http://0.0.0.0:8000/generate -H "Content-Type: application/json" -d '{"user_query": "Which assets Client_1 have a target allocation smaller than 40%?", "session_id": "123"}'
-    ```
-
-Dependencies
-------------
-- fastapi: The web framework for building APIs with Python.
-- pydantic: Data validation and settings management using Python type annotations.
-
-"""
-
 from typing import List
 from fastapi import FastAPI, File, UploadFile
 from fastapi.staticfiles import StaticFiles
@@ -44,8 +5,20 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from time import sleep
 import json
+import os
+from dotenv import load_dotenv, find_dotenv
+
+from langchain_pinecone import PineconeVectorStore
+from langchain_openai import OpenAIEmbeddings
 
 from src.executor import get_data_summary, exec_agent
+
+
+load_dotenv(find_dotenv())
+
+LLM_API_KEY = os.environ.get("LLM_KEY")
+PINECONE_API_KEY = os.environ.get("PINECONE_API_KEY")
+PINECONE_INDEX_NAME = os.environ.get("PINECONE_INDEX_NAME")
 
 
 class UploadDataRequest(BaseModel):
@@ -111,11 +84,25 @@ async def create_upload_file(file: UploadFile = File(...)):
     with open("./data/data_desc.json", "r") as f:
         data_desc = json.load(f)
 
-    data_desc += [{
+    data_element = [{
         "dataset_path": f"./data/{file.filename}", 
         "description": res["overview"],
         "attrs_desc": res["attrs_desc"]
     }]
+
+    data_desc += data_element
+
+    # upload to a vector database
+    embedding = OpenAIEmbeddings(
+    model="text-embedding-3-large",
+    api_key=LLM_API_KEY
+    )
+    PineconeVectorStore.from_texts(
+      [f"{data_desc[0]['dataset_path']}: {data_desc[0]['description']}"],
+      index_name=PINECONE_INDEX_NAME,
+      embedding=embedding
+    )
+
     with open("./data/data_desc.json", "w") as f:
         json.dump(data_desc, f)
 
