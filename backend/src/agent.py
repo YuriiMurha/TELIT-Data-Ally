@@ -83,10 +83,11 @@ l.info("Initializing agent memory")
 
 memory = ChatMessageHistory(session_id="test-session")
 
-l.info("Creating ReAct agent")
-react_agent = create_openai_tools_agent(llm=llm, prompt=prompt, tools=tools)
+l.info("Creating ReAct agents")
+summary_agent = create_openai_tools_agent(llm=llm, prompt=prompt, tools=tools)
+
 agent_executor = AgentExecutor(
-    agent=react_agent,
+    agent=summary_agent,
     tools=tools,
     max_iterations=5,
     verbose=True,

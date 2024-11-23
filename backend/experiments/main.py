@@ -40,8 +40,14 @@ Dependencies
 from typing import List
 from fastapi import FastAPI
 from pydantic import BaseModel
+from time import sleep
 
 from src.agent import agent
+from src.executor import get_data_summary
+
+
+class UploadDataRequest(BaseModel):
+    data: str
 
 
 class GenerationRequest(BaseModel):
@@ -69,6 +75,10 @@ async def healthcheck():
     """
     return {"status": "ok"}
 
+@app.post("/upload-data")
+async def upload_data():
+    res = get_data_summary("123", "./data/German_Companies.csv")
+    return res
 
 @app.post("/generate")
 async def generate(gen_req: GenerationRequest):
@@ -84,6 +94,7 @@ async def generate(gen_req: GenerationRequest):
     
     responses = []
     for query in gen_req.user_queries:
+        sleep(2)
         responses.append(agent.invoke(
             {
                 "input": query,
