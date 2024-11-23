@@ -4,7 +4,7 @@ import requests
 url = "http://localhost:8000/generate"
 headers = {"Content-Type": "application/json"}
 data = {
-    "user_query": "Which assets Client_1 have a target allocation smaller than 40%?",
+    "user_query": "Make a correlation table between attributes?",
     "session_id": "123"
 }
 
