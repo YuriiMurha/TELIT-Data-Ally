@@ -1,0 +1,22 @@
+/* Стиль для контейнера прокрутки */
+#wrapper {
+  overflow: hidden;
+}
+
+/* Обязательные стили для Locomotive Scroll */
+[data-scroll-container] {
+  /* любые дополнительные стили */
+}
+
+/* Стили панелей */
+.panel {
+  position: relative;
+}
+
+.panel-fiol {
+  z-index: 2;
+}
+
+.panel-blue {
+  z-index: 1;
+}
