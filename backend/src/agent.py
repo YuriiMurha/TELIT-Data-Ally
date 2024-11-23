@@ -62,7 +62,7 @@ system_prompt = PromptTemplate.from_template(
         [
             p.get_agent_description_prompt(),
             p.get_tools_prompt(tools),
-            p.get_sql_tool_rules_prompt(),
+            p.get_da_tool_rules_prompt(),
         ]
     )
 )

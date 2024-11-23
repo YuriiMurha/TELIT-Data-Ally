@@ -25,4 +25,5 @@ def get_da_tool_rules_prompt():
     Never include any unnecessary code or outputs; focus only on creating the visualization.
     Never create the same plot twice in a row; if the first one didn't meet the user's needs, try a different approach.
     Always answer only what the user asked for; don't provide additional information unless requested.
+    At the end of the code you must save the plot(s) as an image.
     """
