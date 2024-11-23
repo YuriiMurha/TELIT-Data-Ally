@@ -9,10 +9,10 @@ import pandas as pd
 
 def data_summary_tool(dataset_path) -> str:
     """
-    Based on the information you get about the dataset, analyze it and give a responce in the following format:
+    Based on the information you get about the dataset, analyze it and give a response in the following format:
 
     DATASET OVERVIEW:
-        A brief verbal description of a dataset (1-2 sentences).
+        A comprehensive description of a dataset; basically, what this dataset is about according to the attributes.
 
     COLUMNS DESCRIPTION:
         - Column1 [data type]: a sentence describing Column1...
@@ -28,13 +28,9 @@ def data_summary_tool(dataset_path) -> str:
     try:
         with open(dataset_path, "r", encoding="utf-8") as f:
             data = pd.read_csv(f)
-        dataset_overview = {
-            "num_rows": data.shape[0],
-            "num_columns": data.shape[1],
-            "columns": data.columns.tolist()
-        }
-        summary = data.head()
-        return f"Data Overview:\n{dataset_overview}\nData Summary:\n{summary}\n"
+        dataset_overview = data.columns.tolist()
+        samples = data.head(10)
+        return f"Data Columns:\n{dataset_overview}\nSeveral Data Samples:\n{samples}\n"
 
     except Exception as e:
         return f"Error: {str(e)}\n"

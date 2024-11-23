@@ -43,8 +43,7 @@ from pydantic import BaseModel
 from time import sleep
 import json
 
-from src.agent import agent
-from src.executor import get_data_summary
+from src.executor import get_data_summary, exec_agent
 
 
 class UploadDataRequest(BaseModel):
@@ -64,17 +63,6 @@ class GenerationRequest(BaseModel):
     session_id: str
 
 app = FastAPI()
-
-
-@app.get("/healthcheck")
-async def healthcheck():
-    """
-    Health check endpoint to verify if the API is running.
-
-    Returns:
-        dict: A dictionary indicating the status of the API.
-    """
-    return {"status": "ok"}
 
 
 @app.post("/upload")
@@ -103,7 +91,11 @@ async def create_upload_file(file: UploadFile = File(...)):
     with open("./data/data_desc.json", "r") as f:
         data_desc = json.load(f)
 
-    data_desc += [{"dataset_path": f"./data/{file.filename}", "description": res["overview"]}]
+    data_desc += [{
+        "dataset_path": f"./data/{file.filename}", 
+        "description": res["overview"],
+        "attrs_desc": res["attrs_desc"]
+    }]
     with open("./data/data_desc.json", "w") as f:
         json.dump(data_desc, f)
 
@@ -126,10 +118,5 @@ async def generate(gen_req: GenerationRequest):
     responses = []
     for query in gen_req.user_queries:
         sleep(2)
-        responses.append(agent.invoke(
-            {
-                "input": query,
-            },
-            {"configurable": {"session_id": gen_req.session_id}},
-        ))
+        responses.append(exec_agent("123", query))
     return [res["output"] for res in responses]

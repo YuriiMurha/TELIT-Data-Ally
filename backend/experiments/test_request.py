@@ -10,8 +10,7 @@ data = {
 }
 
 # Make the POST request
-# response = requests.post(url, json=data, headers=headers)
-response = requests.post("http://localhost:8000/upload-data", headers=headers)
+response = requests.post(url, json=data, headers=headers)
 
 # Print the response
 if response.status_code == 200:
