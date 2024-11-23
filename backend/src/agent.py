@@ -36,7 +36,7 @@ from langchain_openai import ChatOpenAI
 
 import src.prompts as p
 from src.logger.logger import l
-from src.tools.sql import sql_tool
+from src.tools.data_visualization import datavis_executer
 
 dotenv.load_dotenv(".env")
 
@@ -52,7 +52,7 @@ llm = ChatOpenAI(
 )
 
 l.info("Binding tools to the LLM")
-tools = [StructuredTool.from_function(func=sql_tool, handle_tool_error=True)]
+tools = [StructuredTool.from_function(func=datavis_executer, handle_tool_error=True)]
 llm.bind_tools(tools)
 
 
