@@ -1,0 +1,10 @@
+[
+  {
+    "dataset_path": "./data/German_Companies.csv",
+    "description": "This dataset contains information about German companies, including details such as revenue, net income, liabilities, assets, equity, return on assets (ROA), return on equity (ROE), debt to equity ratio, and percentage debt to equity."
+  },
+  {
+    "dataset_path": "./data/titanic_dataset.csv",
+    "description": "The dataset contains 418 rows and 11 columns including 'PassengerId', 'Pclass', 'Name', 'Sex', 'Age', 'SibSp', 'Parch', 'Ticket', 'Fare', 'Cabin', and 'Embarked'."
+  }
+]

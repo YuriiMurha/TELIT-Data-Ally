@@ -38,10 +38,10 @@ Dependencies
 """
 
 from typing import List
-from fastapi import FastAPI, File, UploadFile, WebSocket
-from fastapi.responses import FileResponse, WebSocketResponse
+from fastapi import FastAPI, File, UploadFile
 from pydantic import BaseModel
 from time import sleep
+import json
 
 from src.agent import agent
 from src.executor import get_data_summary
@@ -76,12 +76,8 @@ async def healthcheck():
     """
     return {"status": "ok"}
 
-@app.post("/upload-data")
-async def upload_data():
-    res = get_data_summary("123", "./data/German_Companies.csv")
-    return res
 
-@app.post("/uploadfile/")
+@app.post("/upload")
 async def create_upload_file(file: UploadFile = File(...)):
     """
     Endpoint to upload a file to the server.
@@ -92,30 +88,28 @@ async def create_upload_file(file: UploadFile = File(...)):
     Returns:
         dict: A dictionary indicating the status of the upload.
     """
+    print(file)
     if file is None:
         return {"status": "400", "error": "No file was provided"}
 
     try:
         # Save the file to data folder
-        with open(f"data/{file.filename}", "wb") as buffer:
+        with open(f"./data/{file.filename}", "wb") as buffer:
             buffer.write(await file.read())
     except Exception as e:
         return {"status": "500", "error": f"Error occurred while saving the file: {e}"}
 
-    return {"status": "200"}
+    res = get_data_summary("123", f"./data/{file.filename}")
+    with open("./data/data_desc.json", "r") as f:
+        data_desc = json.load(f)
 
-@app.get("/files/{filename}")
-async def download_file(filename: str):
-    """
-    Endpoint to download a file from the server.
+    data_desc += [{"dataset_path": f"./data/{file.filename}", "description": res["overview"]}]
+    with open("./data/data_desc.json", "w") as f:
+        json.dump(data_desc, f)
 
-    Args:
-        filename (str): The name of the file to be downloaded.
+    res["status"] = "200"
+    return res
 
-    Returns:
-        FileResponse: A FileResponse object containing the file to be downloaded.
-    """
-    return FileResponse(f"data/{filename}")
 
 @app.post("/generate")
 async def generate(gen_req: GenerationRequest):

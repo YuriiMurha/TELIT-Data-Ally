@@ -69,8 +69,9 @@ def get_data_summary(session_id, dataset_path):
             },
             {"configurable": {"session_id": session_id}},
         )
-    overview = res["output"].split("COLUMNS DESCRIPTION:\n")[0].replace("DATASET OVERVIEW:", "").replace("\n", "")
-    attrs_desc = res["output"].split("COLUMNS DESCRIPTION:\n")[1]
+    output = res["output"].replace("**", "")
+    overview = output.split("COLUMNS DESCRIPTION:\n")[0].replace("DATASET OVERVIEW:", "").replace("\n", "")
+    attrs_desc = output.split("COLUMNS DESCRIPTION:\n")[1]
     return {"overview": overview, "attrs_desc": attrs_desc}
 
 
