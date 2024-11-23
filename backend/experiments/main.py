@@ -40,6 +40,7 @@ Dependencies
 from typing import List
 from fastapi import FastAPI, File, UploadFile
 from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from time import sleep
 import json
@@ -64,6 +65,21 @@ class GenerationRequest(BaseModel):
     session_id: str
 
 app = FastAPI()
+
+origins = [
+    "http://localhost.tiangolo.com",
+    "https://localhost.tiangolo.com",
+    "http://localhost:3000",
+    "http://localhost:8080",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 app.mount("/plots", StaticFiles(directory="plots"), name="plots")
@@ -108,7 +124,7 @@ async def create_upload_file(file: UploadFile = File(...)):
 
 
 @app.post("/generate")
-async def generate(gen_req: GenerationRequest):
+async def generate(gen_req: dict):
     """
     Endpoint to generate responses from the agent based on a list of user queries.
 
@@ -120,7 +136,7 @@ async def generate(gen_req: GenerationRequest):
     """
     
     responses = []
-    for query in gen_req.user_queries:
+    for query in gen_req.get("user_queries"):
         sleep(2)
         responses.append(exec_agent("123", query))
     return [res for res in responses]
