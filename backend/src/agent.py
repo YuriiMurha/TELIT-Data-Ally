@@ -36,7 +36,7 @@ from langchain_openai import ChatOpenAI
 
 import src.prompts as p
 from src.logger.logger import l
-from src.tools.data_visualization import datavis_executer
+import src.tools as t
 
 dotenv.load_dotenv(".env")
 
@@ -44,7 +44,7 @@ dotenv.load_dotenv(".env")
 l.info("Building LLM")
 llm = ChatOpenAI(
     name="gpt-4o",
-    temperature=0,
+    temperature=0.,
     model_kwargs={
         "seed": 42,
     },
@@ -52,7 +52,10 @@ llm = ChatOpenAI(
 )
 
 l.info("Binding tools to the LLM")
-tools = [StructuredTool.from_function(func=datavis_executer, handle_tool_error=True)]
+tools = [
+    StructuredTool.from_function(func=t.datavis_executer, handle_tool_error=True),
+    StructuredTool.from_function(func=t.data_summary_tool, handle_tool_error=True)
+]
 llm.bind_tools(tools)
 
 
@@ -62,7 +65,7 @@ system_prompt = PromptTemplate.from_template(
         [
             p.get_agent_description_prompt(),
             p.get_tools_prompt(tools),
-            p.get_da_tool_rules_prompt(),
+            # p.get_da_tool_rules_prompt(),
         ]
     )
 )

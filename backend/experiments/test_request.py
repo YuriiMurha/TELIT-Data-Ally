@@ -4,7 +4,7 @@ import requests
 url = "http://localhost:8000/generate"
 headers = {"Content-Type": "application/json"}
 data = {
-    "user_queries": ["Make a correlation table between attributes?", "Give a new plot example"],
+    "user_queries": ["Make a correlation table between attributes.", "Give a new plot example."],
     "session_id": "123"
 }
 

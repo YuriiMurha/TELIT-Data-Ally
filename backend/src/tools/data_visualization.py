@@ -4,7 +4,7 @@ import pandas as pd
 dataset_path = "./data/titanic_dataset.csv"
 
 
-def datavis_executer(visualization_code: str):
+def datavis_executer(visualization_code: str) -> str:
     """
     Visualizes plots using a DataFrame variable called "df" and a given python code as an argument.
 
@@ -12,7 +12,7 @@ def datavis_executer(visualization_code: str):
         visualization_code (str): A python code that will be executed for visualizing and saving plots.
 
     Returns:
-        Whether the visualization was successful or not. If yes, returns a path to the saved plot.
+        Whether the visualization was successful or not.
     """
     df = pd.read_csv(dataset_path)
     
