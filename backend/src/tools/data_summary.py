@@ -19,6 +19,8 @@ def data_summary_tool(dataset_path) -> str:
         - Column2 [data type]: a sentence describing Column2...
         ...
 
+    The column names must be strictly the same as in the example. Even if grammatically incorrect with all additional symbols, etc.
+
     Args:
         dataset_path (str): path to the file
 

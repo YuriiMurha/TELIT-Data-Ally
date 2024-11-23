@@ -119,4 +119,4 @@ async def generate(gen_req: GenerationRequest):
     for query in gen_req.user_queries:
         sleep(2)
         responses.append(exec_agent("123", query))
-    return [res["output"] for res in responses]
+    return [res for res in responses]

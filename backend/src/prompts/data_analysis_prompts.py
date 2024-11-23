@@ -3,7 +3,7 @@ __all__ = ["get_da_tool_rules_prompt"]
 
 def get_da_tool_rules_prompt(data_summary: dict) -> str:
     return f"""\
-    You have access to a dataset. Here's a brief overview of the dataset:
+    You have access to a dataset. A path to the dataset: {data_summary['dataset_path']} Here's a brief overview of the dataset:
     
     {data_summary["description"]}
 

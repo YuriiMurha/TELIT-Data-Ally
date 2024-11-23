@@ -3,10 +3,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 
-dataset_path = "./data/titanic_dataset.csv"
-
-
-def datavis_tool(visualization_code: str) -> str:
+def datavis_tool(visualization_code: str, dataset_path: str) -> str:
     """
     Visualizes plots using a DataFrame variable called "df" and a given python code as an argument.
     You can use "plt" and "sns" for the visualization
@@ -14,6 +11,7 @@ def datavis_tool(visualization_code: str) -> str:
 
     Args:
         visualization_code (str): A python code that will be executed for visualizing and saving plots.
+        dataset_path (str): A path to the dataset.
 
     Returns:
         Whether the visualization was successful or not.
