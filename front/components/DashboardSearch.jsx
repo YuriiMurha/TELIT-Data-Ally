@@ -15,28 +15,33 @@ function DashboardSearch() {
 
       <div className="flex flex-row gap-4 justify-center">
         <div
-          className="my-1 flex justify-center h-auto w-[160px] flex-col bg-[#E2097A] rounded-full flex-shrink-0"
+          className="my-2 flex justify-center h-auto w-[180px] flex-col bg-[#E2097A] rounded-full  hover:scale-95 duration-300 "
         >
           <div
-            className="flex justify-center items-center p-2 rounded-full"
+            className="flex  justify-center items-center p-2 rounded-full relative"
             onClick={() => setQueryNumber(queryNumber + 1)}
           >
-            <div className="flex gap-2 items-center">
-              <Plus className="text-white" />
-              <p className="text-white text-sm uppercase font-semibold">Add Prompt</p>
-              
-              <div
-                className={`text-white text-md border-2 border-white rounded-3xl px-2 font-bold ${
-                  queryNumber === 0 ? 'invisible' : ''
-                }`}
-              >
-                {queryNumber}
+            {queryNumber === 0 ? (
+              <div className="flex items-center gap-2 select-none ">
+                <span className="text-white font-semibold text-sm py-1">Add Prompt </span>
+                <Plus className="text-white" />
               </div>
-            </div>
+            ) : (
+              <div className="flex gap-2 flex-row items-center">
+                <Plus className="text-white" />
+                <div className="flex gap-1 flex-row text-white text-sm  font-semibold   select-none ">
+                  <p>Total</p>
+                  <p>Prompts</p>
+                </div>
+                <div className="text-white text-md border-2 border-white rounded-3xl px-2 font-bold">
+                  {queryNumber}
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
-        <div className="my-1 flex justify-center h-auto w-auto flex-col bg-[#E2097A] rounded-full flex-shrink-0">
+        <div className="my-2 px-1 flex justify-center h-auto w-auto flex-col bg-[#E2097A] rounded-full flex-shrink-0 hover:scale-95 duration-300">
           <div className="flex justify-center items-center p-2 rounded-full">
             <ArrowUp className="text-white " />
           </div>

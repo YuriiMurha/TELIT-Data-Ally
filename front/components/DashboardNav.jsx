@@ -49,7 +49,7 @@ function DashboardNav() {
 
     try {
       setUploading(true);
-      const response = await axios.post("http://127.0.0.1:8000/upload", formData, {
+      const response = await axios.post("http://147.232.172.210:8000/upload", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -95,12 +95,12 @@ function DashboardNav() {
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              <SelectLabel>Fruits</SelectLabel>
-              <SelectItem value="apple">Apple</SelectItem>
-              <SelectItem value="banana">Banana</SelectItem>
-              <SelectItem value="blueberry">Blueberry</SelectItem>
-              <SelectItem value="grapes">Grapes</SelectItem>
-              <SelectItem value="pineapple">Pineapple</SelectItem>
+              <SelectLabel>GPT-4o</SelectLabel>
+              <SelectItem value="apple">o1-preview</SelectItem>
+              <SelectItem value="blueberry">Llama 3.1</SelectItem>
+              <SelectItem value="grapes">Mistral 7B</SelectItem>
+              <SelectItem value="pineapple">Gemma</SelectItem>
+              <SelectItem value="banana">Anthropic Claude</SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>

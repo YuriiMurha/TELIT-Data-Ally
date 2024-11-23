@@ -24,7 +24,7 @@ function DashboardContent() {
                 strings: ['Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi corrupti soluta, deserunt fugiat reprehenderit mollitia nam excepturi, saepe, maiores quaerat quisquam nisi magni laborum blanditiis delectus at ad? Temporibus, officiis?'],
                 autoStart: true,
                 delay: 50,
-              loop: false
+                pauseFor: 99999999999999
               }}
             />
           </div>
