@@ -7,7 +7,7 @@ import '@styles/Loading.css'
 
 const PreAnimationMessage = () => {
   return (
-    <div id="pre-animation-message" className="uppercase text-6xl font-extrabold"
+    <div id="pre-animation-message" className="uppercase  font-extrabold"
       style={{
         position: 'fixed', width: '100%', height: '100%', display: 'flex',
         flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
@@ -211,9 +211,9 @@ const PreAnimationMessage = () => {
           </div>
 
         </div>
-        <div className="flex flex-col gap-6 text-6xl font-extrabold">
-          <div className="uppercase   justify-center text-center text-6xlfont-extrabold " style={{ position: 'relative', zIndex: 2 }}>team Null.check</div>
-          <div className="uppercase  justify-center text-center text-6xl font-extrabold " style={{ position: 'relative', zIndex: 2 }}>presents</div>
+        <div className="flex flex-col gap-6 text-5xl font-extrabold">
+          <div className="uppercase   justify-center text-center text-5xl font-extrabold " style={{ position: '', zIndex: 2 }}>team Null.check</div>
+          <div className="uppercase  justify-center text-center text-5xl font-extrabold " style={{ position: 'relative', zIndex: 2 }}>presents</div>
 
         </div>
       </div>

@@ -1,5 +1,6 @@
 import '@styles/globals.css';
 import Template from '../components/Template';
+import NavbarMenu from '@components/NavbarMenu';
 
 const RootLayout = ({ children }) => {
     return (
@@ -13,6 +14,7 @@ const RootLayout = ({ children }) => {
                         {/* <NavbarM /> */}
                     </header>
                     <main style={{ position: 'relative' }}>
+                        <NavbarMenu />
                         <Template>{children}</Template>
                     </main>
                 </div>

@@ -15,7 +15,7 @@ const Home = ({ children }) => {
     }, []);
 
     return (
-        // <Template>
+        <Template>
 
         <div id="wrapper">
             <NavbarMenu />
@@ -43,7 +43,7 @@ const Home = ({ children }) => {
 
 
         </div>
-        // </Template>
+        </Template>
     );
 }
 

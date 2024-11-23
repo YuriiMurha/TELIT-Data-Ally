@@ -13,7 +13,7 @@ const CustomCursor = () => {
     const circle = { x: window.innerWidth / 2, y: window.innerHeight / 2 }; // Например, начать из центра экрана
     let currentScale = 0;
     let currentAngle = 0;
-    const speed = 0.20;
+    const speed = 1;
 
     const mouseMoveHandler = (e) => {
       mouse.x = e.clientX;
@@ -35,7 +35,7 @@ const CustomCursor = () => {
 
       const mouseVelocity = Math.min(Math.sqrt(deltaMouseX**2 + deltaMouseY**2) * 4, 150); 
 
-      const stretchStrength = 1.2; 
+      const stretchStrength = 0.2; 
       const scaleValue = (mouseVelocity / 150) * stretchStrength;
       
       
