@@ -1,27 +1,17 @@
 __all__ = ["get_da_tool_rules_prompt"]
 
 
-def get_da_tool_rules_prompt():
-    return """\
+def get_da_tool_rules_prompt(data_summary:dict) -> str:
+    return f"""\
     The Data Visualization tool enables interaction with datasets by creating visualizations using seaborn and matplotlib libraries. You can generate various types of plots to explore and present the data effectively. The tool will produce visual outputs based on your instructions or return an error message if the visualization cannot be created as specified. The error message as the following: "CANNOT EXECUTE!".
 
     You have access to a dataset. Here's a brief overview of the dataset:
     
-    This dataset contains information about passengers on the Titanic. It includes details such as passenger demographics, ticket information, and travel details. The dataset has 418 rows and 11 columns.
+    {data_summary["overview"]}
 
     COLUMNS DESCRIPTION:
     
-    PassengerId: A unique identifier for each passenger.
-    Pclass: The class of the ticket purchased by the passenger (1 = First, 2 = Second, 3 = Third).
-    Name: The full name of the passenger.
-    Sex: The gender of the passenger (male or female).
-    Age: The age of the passenger.
-    SibSp: The number of siblings or spouses the passenger had aboard the Titanic.
-    Parch: The number of parents or children the passenger had aboard the Titanic.
-    Ticket: The ticket number assigned to the passenger.
-    Fare: The fare paid for the ticket.
-    Cabin: The cabin number assigned to the passenger (if available).
-    Embarked: The port of embarkation (C = Cherbourg, Q = Queenstown, S = Southampton).
+    {data_summary["attrs_desc"]}
 
     When using this tool, you must:
 
