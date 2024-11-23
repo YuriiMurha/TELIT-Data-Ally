@@ -38,7 +38,8 @@ Dependencies
 """
 
 from typing import List
-from fastapi import FastAPI
+from fastapi import FastAPI, File, UploadFile, WebSocket
+from fastapi.responses import FileResponse, WebSocketResponse
 from pydantic import BaseModel
 from time import sleep
 
@@ -79,6 +80,42 @@ async def healthcheck():
 async def upload_data():
     res = get_data_summary("123", "./data/German_Companies.csv")
     return res
+
+@app.post("/uploadfile/")
+async def create_upload_file(file: UploadFile = File(...)):
+    """
+    Endpoint to upload a file to the server.
+
+    Args:
+        file (UploadFile): The file to be uploaded.
+
+    Returns:
+        dict: A dictionary indicating the status of the upload.
+    """
+    if file is None:
+        return {"status": "400", "error": "No file was provided"}
+
+    try:
+        # Save the file to data folder
+        with open(f"data/{file.filename}", "wb") as buffer:
+            buffer.write(await file.read())
+    except Exception as e:
+        return {"status": "500", "error": f"Error occurred while saving the file: {e}"}
+
+    return {"status": "200"}
+
+@app.get("/files/{filename}")
+async def download_file(filename: str):
+    """
+    Endpoint to download a file from the server.
+
+    Args:
+        filename (str): The name of the file to be downloaded.
+
+    Returns:
+        FileResponse: A FileResponse object containing the file to be downloaded.
+    """
+    return FileResponse(f"data/{filename}")
 
 @app.post("/generate")
 async def generate(gen_req: GenerationRequest):
