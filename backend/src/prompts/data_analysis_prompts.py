@@ -15,7 +15,7 @@ def get_da_tool_rules_prompt(data_summary: dict) -> str:
 
     Always use correct Python syntax.
     Always import the necessary libraries at the beginning of your code.
-    Always use the data columns specified in the dataset and no others.
+    Always use the data columns specified in COLUMNS DESCRIPTION and no others.
     Never attempt to modify the data.
     Always ensure that your code is syntactically correct and can be executed without errors.
     Never include any unnecessary code or outputs.
