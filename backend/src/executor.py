@@ -109,7 +109,8 @@ def exec_agent(session_id, user_query):
         dataset_metadata = [i for i in json.load(f) if i["dataset_path"] == data_path][0]
     tools = [
         StructuredTool.from_function(func=t.datavis_tool, handle_tool_error=True),
-        StructuredTool.from_function(func=t.dataagg_tool, handle_tool_error=True)
+        StructuredTool.from_function(func=t.dataagg_tool, handle_tool_error=True),
+        StructuredTool.from_function(func=t.predictive_model_tool, handle_tool_error=True)
     ]
     system_prompt = PromptTemplate.from_template(
         "".join(
@@ -129,7 +130,12 @@ def exec_agent(session_id, user_query):
     )
 
     img_paths = []
+    pred_paths = []
     for img in os.listdir("./plots"):
         shutil.move(f"./plots/{img}", f"./data/images/{img.split('.')[0]}_{round(time.time())}.{img.split('.')[1]}")
         img_paths.append(f"{img.split('.')[0]}_{round(time.time())}.{img.split('.')[1]}")
-    return {"response": res["output"], "plot_paths": img_paths}
+    for pred in os.listdir("./predictions"):
+        shutil.move(f"./predictions/{pred}", f"./data/final_preds/{pred.split('.')[0]}_{round(time.time())}.{pred.split('.')[1]}")
+        pred_paths.append(f"{pred.split('.')[0]}_{round(time.time())}.{pred.split('.')[1]}")
+
+    return {"response": res["output"], "plot_paths": img_paths, "pred_paths": pred_paths}

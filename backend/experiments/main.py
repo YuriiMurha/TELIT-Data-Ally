@@ -57,6 +57,7 @@ app.add_middleware(
 
 app.mount("/plots", StaticFiles(directory="./data/images"), name="plots")
 app.mount("/datasets", StaticFiles(directory="./data"), name="datasets")
+app.mount("/predictions", StaticFiles(directory="./data/final_preds"), name="predictions")
 
 
 @app.post("/upload")

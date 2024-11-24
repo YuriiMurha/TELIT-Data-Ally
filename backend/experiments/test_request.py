@@ -5,7 +5,7 @@ import requests
 url = "http://localhost:8000/generate"
 headers = {"Content-Type": "application/json"}
 data = {
-    "user_queries": ["What is the mean salary of young people?"],
+    "user_queries": ["Predict salary by age"],
     "session_id": "123"
 }
 
