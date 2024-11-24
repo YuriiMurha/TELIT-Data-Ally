@@ -130,5 +130,5 @@ def exec_agent(session_id, user_query):
     img_paths = []
     for img in os.listdir("./plots"):
         shutil.move(f"./plots/{img}", f"./data/images/{img.split('.')[0]}_{round(time.time())}.{img.split('.')[1]}")
-        img_paths.append(f"./data/images/{img.split('.')[0]}_{round(time.time())}.{img.split('.')[1]}")
+        img_paths.append(f"{img.split('.')[0]}_{round(time.time())}.{img.split('.')[1]}")
     return {"response": res["output"], "plot_paths": img_paths}
