@@ -112,6 +112,32 @@ async def create_upload_file(file: UploadFile = File(...)):
     return res
 
 
+@app.post("/delete-dataset")
+async def delete_file(dataset_path: str):
+    """
+    Endpoint to delete a dataset from the server.
+
+    Args:
+        dataset_path (str): The path to the dataset to be deleted.
+
+    Returns:
+        dict: A dictionary indicating the status of the deletion.
+    """
+    try:
+        os.remove(dataset_path)
+    except Exception as e:
+        return {"status": "500", "error": f"Error occurred while deleting the file: {e}"}
+
+    with open("./data/data_desc.json", "r") as f:
+        metadata = json.load(f)
+    metadata = [i for i in metadata if dataset_path not in i["dataset_path"]]
+    metadata_vec = [f"{metadata['dataset_path']}: {metadata['description']}"]
+    PineconeVectorStore.delete(filter=metadata_vec, index_name=PINECONE_INDEX_NAME)
+    with open("./data/data_desc.json", "w") as f:
+        json.dump(metadata, f)
+
+    return {"status": "200"}
+
 @app.post("/generate")
 async def generate(gen_req: dict):
     """
