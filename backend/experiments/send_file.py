@@ -5,7 +5,7 @@ import requests
 url = "http://localhost:8000/upload"
 
 # Define the file to upload
-file_path = "D:\\Desktop\\TELIT-Data-Ally\\backend\data\\HR_TimeSalary.csv"
+file_path = "D:\\Desktop\\TELIT-Data-Ally\\backend\data\\titanic_dataset.csv"
 
 # Open the file in binary mode
 with open(file_path, "rb") as file:

@@ -2,6 +2,8 @@ import dotenv
 import os
 import re
 import json
+import time
+import shutil
 
 from langchain.agents import create_openai_tools_agent
 from langchain_openai import ChatOpenAI
@@ -89,7 +91,7 @@ def get_data_summary(session_id, dataset_path):
 
 def get_best_dataset(session_id, user_query):
     system_prompt = PromptTemplate.from_template(p.get_agent_description_prompt())
-    user_prompt = p.get_choose_file_prompt("./data/data_desc.json", user_query)
+    user_prompt = p.get_choose_file_prompt(user_query)
     agent = get_agent([], system_prompt)
     res = agent.invoke(
         {
@@ -124,4 +126,9 @@ def exec_agent(session_id, user_query):
         },
         {"configurable": {"session_id": session_id}},
     )
-    return res["output"]
+
+    img_paths = []
+    for img in os.listdir("./plots"):
+        shutil.move(f"./plots/{img}", f"./data/images/{img.split('.')[0]}_{round(time.time())}.{img.split('.')[1]}")
+        img_paths.append(f"./data/images/{img.split('.')[0]}_{round(time.time())}.{img.split('.')[1]}")
+    return {"response": res["output"], "plot_paths": img_paths}

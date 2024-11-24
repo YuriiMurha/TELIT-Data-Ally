@@ -39,7 +39,7 @@ class GenerationRequest(BaseModel):
 app = FastAPI()
 
 
-app.mount("/plots", StaticFiles(directory="plots"), name="plots")
+app.mount("/plots", StaticFiles(directory="./data/images"), name="plots")
 
 
 @app.post("/upload")
@@ -82,7 +82,7 @@ async def create_upload_file(file: UploadFile = File(...)):
     api_key=LLM_API_KEY
     )
     PineconeVectorStore.from_texts(
-      [f"{data_desc[0]['dataset_path']}: {data_desc[0]['description']}"],
+      [f"{data_element[0]['dataset_path']}: {data_element[0]['description']}"],
       index_name=PINECONE_INDEX_NAME,
       embedding=embedding
     )
