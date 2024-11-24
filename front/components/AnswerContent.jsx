@@ -4,6 +4,8 @@ import {
   CarouselItem,
 } from "@/components/ui/carousel";
 
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+
 const Answer = ({ description, imageUrl }) => {
   return (
     <div className="flex flex-col">
@@ -23,7 +25,7 @@ const Answer = ({ description, imageUrl }) => {
 // Основной компонент для диалога
 export const Dialog = ({ dialogData }) => {
   return (
-    <div>
+    <div className="flex flex-col">
       {dialogData.map((entry, index) => (
         <div
           className=" text-lg px-5 py-2"
@@ -40,18 +42,26 @@ export const Dialog = ({ dialogData }) => {
         >
           {entry.type === "question" ? (
             <>
-              <div className="font-bold text-lg text-black ">User</div>
+              <div className="font-mono text-lg text-black ">User</div>
               <p>{entry.content}</p>
             </>
           ) : (
             <>
-              <div className="font-bold text-lg text-[#E2097A]">Allyce</div>
+              <div className="flex flex-row items-center gap-3">
+                <Avatar>
+                  <AvatarImage src="/images/allyce.png" className="bg-white" />
+                  <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
+
+                <div className="font-mono text-lg text-[#E2097A]">Allyce</div>
+              </div>
+
               {entry.answers.length > 1 ? (
                 <div className="flex items-center justify-center">
-                  <Carousel className="w-full">
+                  <Carousel className="w-full max-w-[45vw]">
                     <CarouselContent>
                       {entry.answers.map((answer, idx) => (
-                        <CarouselItem key={`item-${idx}`}>
+                        <CarouselItem key={`item-${idx}`} >
                           <div className="p-1 ">
                             <Answer
                               description={answer.description}

@@ -24,9 +24,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Trash } from "lucide-react";
 
-function DashboardNav({ appendFileDescription }) {
+function DashboardNav({ appendFileDescription, descriptions }) {
   const [uploading, setUploading] = useState(false);
-  const [datasetNames, setDatasetNames] = useState([]);
 
   const handleFileChange = (event) => {
     handleUpload(event.target.files[0]);
@@ -38,7 +37,6 @@ function DashboardNav({ appendFileDescription }) {
     }
     const formData = new FormData();
     formData.append("file", selectedFile);
-    setDatasetNames((prevNames) => [...prevNames, selectedFile.name]);
 
     try {
       setUploading(true);
@@ -65,7 +63,7 @@ function DashboardNav({ appendFileDescription }) {
   };
 
   return (
-    <div className="frosted-magenta-small border-2 border-white  flex justify-between items-center py-4 px-8 rounded-2xl">
+    <div className=" flex justify-between items-center rounded-2xl">
       <Dialog>
         <DialogTrigger className="inline-flex items-center justify-center rounded-md text-sm h-9 px-4 py-2 bg-white">
           View datasets
@@ -74,8 +72,8 @@ function DashboardNav({ appendFileDescription }) {
           <DialogHeader>
             <DialogTitle>Uploaded datasets</DialogTitle>
             <DialogDescription>
-              {datasetNames.length !== 0 ? (
-                datasetNames.map((dataset) => (
+              {descriptions.length !== 0 ? (
+                descriptions.map(el => el.name).map((dataset) => (
                   <div
                     key={dataset}
                     className="flex justify-between items-center pt-2"
@@ -98,7 +96,7 @@ function DashboardNav({ appendFileDescription }) {
       </Dialog>
 
       <div className="flex gap-2">
-        <Select>
+        <Select defaultValue="gpt-4o">
           <SelectTrigger className="w-[180px] bg-white">
             <SelectValue placeholder="Predictive model" />
           </SelectTrigger>

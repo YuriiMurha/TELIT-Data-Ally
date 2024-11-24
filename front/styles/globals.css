@@ -138,13 +138,8 @@ html {
   min-height: 100%;
 }
 
-
-
-
-
-
 .gradient-background {
-  background-image: url('/images/scott-webb-OxHPDs4WV8Y-unsplash.jpg');
+  background-image: url('/images/christina-deravedisian-4ZudLA265hw-unsplash.jpg');
   background-size: cover; /* Изображение масштабируется, чтобы полностью покрывать фон */
   background-position: center; /* Изображение центрируется */
   background-repeat: no-repeat; /* Предотвращаем повторение изображения */

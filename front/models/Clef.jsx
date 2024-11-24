@@ -11,9 +11,9 @@ const Clef = (props) => {
   // Загрузка текстур
   const texturePaths = [
     '/images/web_112.webp',
-    '/images/acrylic-blue-textured-background-abstract-creative-art.jpg',
-    '/images/scott-webb-OxHPDs4WV8Y-unsplash.jpg',
-    '/images/Texture4.jpg',
+    // '/images/acrylic-blue-textured-background-abstract-creative-art.jpg',
+    // '/images/scott-webb-OxHPDs4WV8Y-unsplash.jpg',
+    // '/images/Texture4.jpg',
 
   ];
   const textures = useLoader(TextureLoader, texturePaths);

@@ -7,7 +7,7 @@ import '@styles/Loading.css'
 
 const PreAnimationMessage = () => {
   return (
-    <div id="pre-animation-message" className="uppercase  font-extrabold"
+    <div id="pre-animation-message" className="uppercase text-6xl font-extrabold"
       style={{
         position: 'fixed', width: '100%', height: '100%', display: 'flex',
         flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
@@ -211,9 +211,9 @@ const PreAnimationMessage = () => {
           </div>
 
         </div>
-        <div className="flex flex-col gap-6 text-5xl font-extrabold">
-          <div className="uppercase   justify-center text-center text-5xl font-extrabold " style={{ position: '', zIndex: 2 }}>team Null.check</div>
-          <div className="uppercase  justify-center text-center text-5xl font-extrabold " style={{ position: 'relative', zIndex: 2 }}>presents</div>
+        <div className="flex flex-col text-6xl font-extrabold" >
+          <div className="uppercase   justify-center text-center text-6xl font-extrabold text-gray-200 " style={{ color: '#ffffff', position: 'relative', zIndex: 2, fontSize: '55px', fontWeight: 'extrabold' }}>team Null.check</div>
+          <div className="uppercase  justify-center text-center text-6xl font-extrabold " style={{ color: '#ffffff',   position: 'relative', zIndex: 2, fontSize: '55px', fontWeight: 'extrabold' }}>presents</div>
 
         </div>
       </div>
@@ -231,7 +231,10 @@ export const animatePageIn = () => {
     document.getElementById("banner-5"),
     document.getElementById("banner-6"),
     document.getElementById("banner-7"),
-    document.getElementById("banner-8")
+    document.getElementById("banner-8"),
+    document.getElementById("banner-9"),
+    document.getElementById("banner-10"),
+    document.getElementById("banner-11")
   ].filter(Boolean); 
 
   const messageHTML = ReactDOMServer.renderToStaticMarkup(<PreAnimationMessage />);
@@ -243,7 +246,7 @@ export const animatePageIn = () => {
 
   tl.to(messageDiv, {
     opacity: 1,
-    duration: 5
+    duration: 2
   });
 
   // Установка начального состояния для всех баннеров
@@ -254,7 +257,7 @@ export const animatePageIn = () => {
   // Анимация исчезновения сообщения после задержки
   tl.to(messageDiv, {
     opacity: 0,
-    duration: 0.4
+    duration: 0.2
   }, "+=0.4") // Задержка перед началом анимации
 
     // Удаление сообщения из DOM
