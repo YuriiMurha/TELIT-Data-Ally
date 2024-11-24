@@ -132,4 +132,4 @@ async def generate(gen_req: dict):
 
 @app.get("/get-datasets")
 async def get_datasets():
-    return [i for i in os.listdir() if i.endswith(".csv")] + ["data_desc.json"]
+    return [i for i in os.listdir("./data") if i.endswith(".csv")] + ["data_desc.json"]

@@ -14,7 +14,7 @@ def datavis_tool(visualization_code: str, dataset_path: str) -> str:
         dataset_path (str): A path to the dataset.
 
     Returns:
-        Whether the visualization was successful or not.
+        Whether the visualization was successful or not. Also write a comprehensive description of the visualization and the dataset name.
     """
     df = pd.read_csv(dataset_path)
     

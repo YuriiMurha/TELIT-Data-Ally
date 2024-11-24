@@ -1,23 +1,22 @@
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-import numpy as np
 
 
-def data_explore(explore_code: str) -> str:
+def dataagg_tool(aggregation_code: str, dataset_path: str) -> str:
     """
-    Extract knowledge using a DataFrame variable called "df" and a given python code as an argument.
-    You can use "pd","np" and "sns" for the visualization
+    Performs data aggregations using a DataFrame variable called "df" and a given Python code as an argument.
+    You must use only pandas for data aggregation.
 
     Args:
-        explore_code (str): A python code that will be executed
+        aggregation_code (str): A Python code that will be executed for data aggregation.
+        dataset_path (str): A path to the dataset.
 
     Returns:
-        Whether the visualization was successful or not.
+        The result of the aggregation or an error message. Also write a comprehensive description of the aggregation and the dataset name.
     """
+    df = pd.read_csv(dataset_path)
     
     try:
-        exec(explore_code)
-        return f"SUCCESSFUL VISUALIZATION\n"
+        result = eval(aggregation_code)
+        return f"AGGREGATION RESULT:\n{result}\n"
     except Exception as e:
-        return f"UNSUCCESSFUL VISUALIZATION: {e}\n"
+        return f"AGGREGATION FAILED: {e}\n"

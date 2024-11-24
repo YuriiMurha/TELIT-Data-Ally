@@ -109,6 +109,7 @@ def exec_agent(session_id, user_query):
         dataset_metadata = [i for i in json.load(f) if i["dataset_path"] == data_path][0]
     tools = [
         StructuredTool.from_function(func=t.datavis_tool, handle_tool_error=True),
+        StructuredTool.from_function(func=t.dataagg_tool, handle_tool_error=True)
     ]
     system_prompt = PromptTemplate.from_template(
         "".join(
