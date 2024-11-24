@@ -11,6 +11,6 @@ Analysis Engine: Leveraged tools like RAG, ReAct, vector databases, and a descri
 Version Control Integration: Used GitHub.
 
 ## Built With
-- flask
+- fastapi
 - langchain
 - next.js
