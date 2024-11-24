@@ -1,8 +1,8 @@
-"use client"
+"use client";
 import { useState } from "react";
 import axios from "axios";
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Dialog,
   DialogContent,
@@ -10,8 +10,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
-
+} from "@/components/ui/dialog";
 
 import {
   Select,
@@ -24,17 +23,10 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Trash } from "lucide-react";
-import { Separator } from "./ui/separator";
 
-const datasetNames = [
-  "HR_ProductivitySatisfaction.csv",
-  "HR_TimeSalary.csv",
-  "titanic_dataset.csv",
-  "German_Companies.csv"
-]
-
-function DashboardNav() {
+function DashboardNav({ appendFileDescription }) {
   const [uploading, setUploading] = useState(false);
+  const [datasetNames, setDatasetNames] = useState([]);
 
   const handleFileChange = (event) => {
     handleUpload(event.target.files[0]);
@@ -46,15 +38,25 @@ function DashboardNav() {
     }
     const formData = new FormData();
     formData.append("file", selectedFile);
+    setDatasetNames((prevNames) => [...prevNames, selectedFile.name]);
 
     try {
       setUploading(true);
-      const response = await axios.post("http://147.232.172.210:8000/upload", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      console.log(response)
+      const response = await axios.post(
+        "http://147.232.172.217:8000/upload",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      appendFileDescription({
+        name: selectedFile.name,
+        description: response.data?.overview
+      })
+
     } catch (error) {
       console.error("Error uploading file:", error);
     } finally {
@@ -72,17 +74,24 @@ function DashboardNav() {
           <DialogHeader>
             <DialogTitle>Uploaded datasets</DialogTitle>
             <DialogDescription>
-              {/* {datasetNames.map((dataset) => (
-                <>
-                  <div key={dataset} className="flex justify-between items-center pt-2">
-                    <div className="border-[#E2097A] border-b">
-                      {dataset}
-                    </div>
-                    <Trash className="cursor-pointer select-none text-[#E2097A]" size={24}/>
+              {datasetNames.length !== 0 ? (
+                datasetNames.map((dataset) => (
+                  <div
+                    key={dataset}
+                    className="flex justify-between items-center pt-2"
+                  >
+                    <div className="border-[#E2097A] border-b">{dataset}</div>
+                    <Trash
+                      className="cursor-pointer select-none text-[#E2097A]"
+                      size={24}
+                    />
                   </div>
-                  
-                </>
-              )) */}
+                ))
+              ) : (
+                <div className="flex items-center justify-center w-10 h-10">
+                  Empty.
+                </div>
+              )}
             </DialogDescription>
           </DialogHeader>
         </DialogContent>
@@ -95,27 +104,27 @@ function DashboardNav() {
           </SelectTrigger>
           <SelectContent>
             <SelectGroup>
-              <SelectLabel>GPT-4o</SelectLabel>
-              <SelectItem value="apple">o1-preview</SelectItem>
-              <SelectItem value="blueberry">Llama 3.1</SelectItem>
-              <SelectItem value="grapes">Mistral 7B</SelectItem>
-              <SelectItem value="pineapple">Gemma</SelectItem>
-              <SelectItem value="banana">Anthropic Claude</SelectItem>
+              <SelectLabel>Model</SelectLabel>
+              <SelectItem value="o1-preview">o1-preview</SelectItem>
+              <SelectItem value="anthropic-claude">Anthropic Claude</SelectItem>
+              <SelectItem value="llama">Llama 3.1</SelectItem>
+              <SelectItem value="mistral">Mistral 7B</SelectItem>
+              <SelectItem value="gpt-4o">GPT-4o</SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>
 
         <Button disabled={uploading}>
-        <div className="grid w-full max-w-sm items-center gap-1.5">
-          <Label htmlFor="file-upload">Choose File</Label>
-          <Input
-            type="file"
-            accept=".csv, .xls, .xlsx"
-            onChange={handleFileChange}
-            className="hidden"
-            id="file-upload"
-          />
-        </div>
+          <div className="grid w-full max-w-sm items-center gap-1.5">
+            <Label htmlFor="file-upload">Choose File</Label>
+            <Input
+              type="file"
+              accept=".csv, .xls, .xlsx"
+              onChange={handleFileChange}
+              className="hidden"
+              id="file-upload"
+            />
+          </div>
         </Button>
       </div>
     </div>
