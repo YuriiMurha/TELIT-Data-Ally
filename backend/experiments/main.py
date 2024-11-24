@@ -56,6 +56,7 @@ app.add_middleware(
 
 
 app.mount("/plots", StaticFiles(directory="./data/images"), name="plots")
+app.mount("/datasets", StaticFiles(directory="./data"), name="datasets")
 
 
 @app.post("/upload")
@@ -127,3 +128,8 @@ async def generate(gen_req: dict):
         sleep(2)
         responses.append(exec_agent("123", query))
     return [res for res in responses]
+
+
+@app.get("/get-datasets")
+async def get_datasets():
+    return [i for i in os.listdir() if i.endswith(".csv")] + ["data_desc.json"]
