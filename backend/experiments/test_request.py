@@ -1,10 +1,11 @@
 import requests
 
+
 # Define the URL and payload
 url = "http://localhost:8000/generate"
 headers = {"Content-Type": "application/json"}
 data = {
-    "user_queries": ["Make a correlation table between attributes.", "Give a new plot example."],
+    "user_queries": ["Predict salary by age"],
     "session_id": "123"
 }
 

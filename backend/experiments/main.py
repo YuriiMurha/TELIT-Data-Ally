@@ -1,48 +1,28 @@
-"""
-FastAPI Application for ReAct Agent with LangChain and OpenAI
--------------------------------------------------------------
-
-This module sets up a FastAPI application to interact with the ReAct agent. The agent is designed to process user queries,
-interact with an SQL database, and return coherent, context-aware responses. The FastAPI application exposes endpoints
-for health checking and generating responses from the agent.
-
-Structure
----------
-- Imports: Necessary libraries and modules.
-- Data Models: Pydantic models for request validation.
-- FastAPI App: Initialization of the FastAPI application.
-- Endpoints: API endpoints for health check and generating responses.
-
-Usage
------
-1. Run the FastAPI server:
-    ```sh
-    fastapi dev main.py
-    ```
-2. Access the health check endpoint at:
-    http://127.0.0.1:8000/healthcheck
-3. Generate a response by sending a POST request to:
-    http://127.0.0.1:8000/generate
-    with a JSON payload containing the user query.
-
-Example:
-    ```sh
-    curl -X POST http://0.0.0.0:8000/generate -H "Content-Type: application/json" -d '{"user_query": "Which assets Client_1 have a target allocation smaller than 40%?", "session_id": "123"}'
-    ```
-
-Dependencies
-------------
-- fastapi: The web framework for building APIs with Python.
-- pydantic: Data validation and settings management using Python type annotations.
-
-"""
-
 from typing import List
-from fastapi import FastAPI, File, UploadFile, WebSocket
-from fastapi.responses import FileResponse, WebSocketResponse
+from fastapi import FastAPI, File, UploadFile
+from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from time import sleep
+import json
+import os
+from dotenv import load_dotenv, find_dotenv
 
-from src.agent import agent
+from langchain_pinecone import PineconeVectorStore
+from langchain_openai import OpenAIEmbeddings
+
+from src.executor import get_data_summary, exec_agent
+
+
+load_dotenv(find_dotenv())
+
+LLM_API_KEY = os.environ.get("LLM_KEY")
+PINECONE_API_KEY = os.environ.get("PINECONE_API_KEY")
+PINECONE_INDEX_NAME = os.environ.get("PINECONE_INDEX_NAME")
+
+
+class UploadDataRequest(BaseModel):
+    data: str
 
 
 class GenerationRequest(BaseModel):
@@ -59,19 +39,28 @@ class GenerationRequest(BaseModel):
 
 app = FastAPI()
 
+origins = [
+    "http://localhost.tiangolo.com",
+    "https://localhost.tiangolo.com",
+    "http://localhost:3000",
+    "http://localhost:8080",
+]
 
-@app.get("/healthcheck")
-async def healthcheck():
-    """
-    Health check endpoint to verify if the API is running.
-
-    Returns:
-        dict: A dictionary indicating the status of the API.
-    """
-    return {"status": "ok"}
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
-@app.post("/uploadfile/")
+app.mount("/plots", StaticFiles(directory="./data/images"), name="plots")
+app.mount("/datasets", StaticFiles(directory="./data"), name="datasets")
+app.mount("/predictions", StaticFiles(directory="./data/final_preds"), name="predictions")
+
+
+@app.post("/upload")
 async def create_upload_file(file: UploadFile = File(...)):
     """
     Endpoint to upload a file to the server.
@@ -82,33 +71,75 @@ async def create_upload_file(file: UploadFile = File(...)):
     Returns:
         dict: A dictionary indicating the status of the upload.
     """
+    print(file)
     if file is None:
         return {"status": "400", "error": "No file was provided"}
 
     try:
         # Save the file to data folder
-        with open(f"data/{file.filename}", "wb") as buffer:
+        with open(f"./data/{file.filename}", "wb") as buffer:
             buffer.write(await file.read())
     except Exception as e:
         return {"status": "500", "error": f"Error occurred while saving the file: {e}"}
 
-    return {"status": "200"}
+    res = get_data_summary("123", f"./data/{file.filename}")
+    with open("./data/data_desc.json", "r") as f:
+        data_desc = json.load(f)
 
-@app.get("/files/{filename}")
-async def download_file(filename: str):
+    data_element = [{
+        "dataset_path": f"./data/{file.filename}", 
+        "description": res["overview"],
+        "attrs_desc": res["attrs_desc"]
+    }]
+
+    data_desc += data_element
+
+    # upload to a vector database
+    embedding = OpenAIEmbeddings(
+    model="text-embedding-3-large",
+    api_key=LLM_API_KEY
+    )
+    PineconeVectorStore.from_texts(
+      [f"{data_element[0]['dataset_path']}: {data_element[0]['description']}"],
+      index_name=PINECONE_INDEX_NAME,
+      embedding=embedding
+    )
+
+    with open("./data/data_desc.json", "w") as f:
+        json.dump(data_desc, f)
+
+    res["status"] = "200"
+    return res
+
+
+@app.post("/delete-dataset")
+async def delete_file(dataset_path: str):
     """
-    Endpoint to download a file from the server.
+    Endpoint to delete a dataset from the server.
 
     Args:
-        filename (str): The name of the file to be downloaded.
+        dataset_path (str): The path to the dataset to be deleted.
 
     Returns:
-        FileResponse: A FileResponse object containing the file to be downloaded.
+        dict: A dictionary indicating the status of the deletion.
     """
-    return FileResponse(f"data/{filename}")
+    try:
+        os.remove(dataset_path)
+    except Exception as e:
+        return {"status": "500", "error": f"Error occurred while deleting the file: {e}"}
+
+    with open("./data/data_desc.json", "r") as f:
+        metadata = json.load(f)
+    metadata = [i for i in metadata if dataset_path not in i["dataset_path"]]
+    metadata_vec = [f"{metadata['dataset_path']}: {metadata['description']}"]
+    PineconeVectorStore.delete(filter=metadata_vec, index_name=PINECONE_INDEX_NAME)
+    with open("./data/data_desc.json", "w") as f:
+        json.dump(metadata, f)
+
+    return {"status": "200"}
 
 @app.post("/generate")
-async def generate(gen_req: GenerationRequest):
+async def generate(gen_req: dict):
     """
     Endpoint to generate responses from the agent based on a list of user queries.
 
@@ -120,11 +151,23 @@ async def generate(gen_req: GenerationRequest):
     """
     
     responses = []
-    for query in gen_req.user_queries:
-        responses.append(agent.invoke(
-            {
-                "input": query,
-            },
-            {"configurable": {"session_id": gen_req.session_id}},
-        ))
-    return [res["output"] for res in responses]
+    for query in gen_req.get("user_queries"):
+        sleep(2)
+        responses.append(exec_agent("123", query))
+    return [res for res in responses]
+
+
+@app.get("/get-datasets")
+async def get_datasets():
+    dataset_paths = [i for i in os.listdir("./data") if i.endswith(".csv")]
+    result = []
+    with open("./data/data_desc.json", "r") as f:
+        metadata = json.load(f)
+    for dataset in dataset_paths:
+        meta_dataset = [i for i in metadata if dataset in i["dataset_path"]][0]
+        result.append({
+            "dataset_name": dataset,
+            "description": meta_dataset["description"],
+            "attr_desc": meta_dataset["attrs_desc"]
+        })
+    return result

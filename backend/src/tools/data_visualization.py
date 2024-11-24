@@ -1,18 +1,20 @@
 import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 
-dataset_path = "./data/titanic_dataset.csv"
-
-
-def datavis_executer(visualization_code: str) -> str:
+def datavis_tool(visualization_code: str, dataset_path: str) -> str:
     """
     Visualizes plots using a DataFrame variable called "df" and a given python code as an argument.
+    You can use "plt" and "sns" for the visualization
+    At the end of the code you must add "plt.savefig" to save the plot using in a folder called "plots".
 
     Args:
         visualization_code (str): A python code that will be executed for visualizing and saving plots.
+        dataset_path (str): A path to the dataset.
 
     Returns:
-        Whether the visualization was successful or not.
+        Whether the visualization was successful or not. Also write a comprehensive description of the visualization and the dataset name.
     """
     df = pd.read_csv(dataset_path)
     
