@@ -132,4 +132,14 @@ async def generate(gen_req: dict):
 
 @app.get("/get-datasets")
 async def get_datasets():
-    return [i for i in os.listdir("./data") if i.endswith(".csv")] + ["data_desc.json"]
+    dataset_paths = [i for i in os.listdir("./data") if i.endswith(".csv")]
+    result = []
+    with open("./data/data_desc.json", "r") as f:
+        metadata = json.load(f)
+    for dataset in dataset_paths:
+        result.append({
+            "dataset_name": dataset,
+            "description": metadata["description"],
+            "attr_desc": metadata["attrs_desc"]
+        })
+    return result
