@@ -137,9 +137,10 @@ async def get_datasets():
     with open("./data/data_desc.json", "r") as f:
         metadata = json.load(f)
     for dataset in dataset_paths:
+        meta_dataset = [i for i in metadata if dataset in i["dataset_path"]][0]
         result.append({
             "dataset_name": dataset,
-            "description": metadata["description"],
-            "attr_desc": metadata["attrs_desc"]
+            "description": meta_dataset["description"],
+            "attr_desc": meta_dataset["attrs_desc"]
         })
     return result
