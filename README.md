@@ -1,5 +1,5 @@
-![[landing.png]]
-![[chat.png]]
+<img src="https://imgur.com/mEb4rY0.png">
+<img src="https://imgur.com/RcNUpQs.png">
 # Inspiration
 Allyce was inspired by countless hours spent on document processing, preprocessing, keyword extraction, etc. We realized that users were tired of looking for a solution. And that's where we come in, with a simple and easy-to-understand interface that helps you understand what's in your data with just a few lines of your query.
 
